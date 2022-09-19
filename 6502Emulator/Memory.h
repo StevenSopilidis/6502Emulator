@@ -24,5 +24,6 @@ public:
 			throw std::invalid_argument("location must be between 0 and " + MAX_MEM);
 		Data[location] = data;
 	}
+	void WriteWord(Word data, u32 addr, u32& cycles);
 };
 

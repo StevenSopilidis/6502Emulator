@@ -23,7 +23,15 @@ private:
     Byte V : 1; // overflow flag
     Byte N : 1; // negative flag
     void Reset();
+    // decrements program counter
+    // fetches byte based on pc
     Byte FetchByte(u32& cycles);
+    // does not decrements program counter
+    Byte ReadByte(Byte& addr,u32& cycles);
+    void SetLDAStatus(Byte& value);
+    Byte Add(Byte& value1, Byte& value2, u32& cycles);
+    Word FetchWord(u32& cycles);
+
 public:
     Cpu(Memory* mem);
     /// <summary>

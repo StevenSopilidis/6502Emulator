@@ -10,3 +10,9 @@ void  Memory::Initialize() {
 Byte* Memory::GetMem() {
 	return Data;
 }
+
+void Memory::WriteWord(Word data, u32 addr, u32& cycles) {
+	Data[addr] = data & 0xFF;
+	Data[addr + 1] = (data >> 8);
+	cycles--;
+}

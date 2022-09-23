@@ -4,6 +4,7 @@
 typedef unsigned char Byte;
 typedef unsigned short Word;
 typedef unsigned int u32;
+typedef int s32;
 
 class Memory
 {
@@ -16,14 +17,9 @@ public:
 	Byte operator[](u32 offset) const {
 		if (offset > MAX_MEM || offset < 0)
 			throw std::invalid_argument("offset must be between 0 and " + MAX_MEM);
-		return this->Data[offset];
+		return Data[offset];
 	}
-	void SetMem(Byte data, u32 location)
-	{
-		if (location > MAX_MEM || location < 0)
-			throw std::invalid_argument("location must be between 0 and " + MAX_MEM);
-		Data[location] = data;
-	}
-	void WriteWord(Word data, u32 addr, u32& cycles);
+	void SetMem(Byte data, u32 location);
+	void WriteWord(Word data, u32 addr, s32& cycles);
 };
 

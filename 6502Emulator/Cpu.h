@@ -30,9 +30,15 @@ private:
     Byte ReadByte(Word addr, s32& cycles);
     // does not decrements program counter
     Word ReadWord(Word addr, s32& cycles);
-    void SetLDAStatus(Byte& value);
-    void SetLDXStatus(Byte& value);
-    void SetLDYStatus(Byte& cycles);
+    void SetLDAStatus(Byte value);
+    void SetLDXStatus(Byte value);
+    void SetLDYStatus(Byte value);
+    /// <summary>
+    /// operation for activating the correct flags when
+    /// executing transfer operations
+    /// </summary>
+    /// <param name="value">Value that we transfered </param>
+    void SetTransferOperationStatus(Byte value);
     Byte Add(Byte& value1, Byte& value2, s32& cycles);
     Word FetchWord(s32& cycles);
 
@@ -47,6 +53,10 @@ public:
     s32 Execute(s32 cycles);
     Byte GetARegistersContent();
     Byte GetXRegistersContent();
+    Byte GetYRegisterContent();
+    void  SetARegistersContent(Byte value);
+    void  SetXRegistersContent(Byte value);
+    void  SetYRegistersContent(Byte value);
     /// <summary>
     /// method for checking if page crossed, and if so remove one cycle
     /// </summary>

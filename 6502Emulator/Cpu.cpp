@@ -23,22 +23,27 @@ Byte Cpu::Add(Byte& value1, Byte& value2, s32& cycles) {
 }
 
 
-void Cpu::SetLDAStatus(Byte& value) {
+void Cpu::SetLDAStatus(Byte value) {
 	A = value;
 	Z = (A == 0); // set zero flag
 	N = (A & 0b01000000) > 0; // set N if bit 7 of A is set
 }
 
-void  Cpu::SetLDXStatus(Byte& value) {
+void  Cpu::SetLDXStatus(Byte value) {
 	X = value;
 	Z = (A == 0); // set zero flag
 	N = (A & 0b01000000) > 0; // set N if bit 7 of A is set
 }
 
-void  Cpu::SetLDYStatus(Byte& value) {
+void  Cpu::SetLDYStatus(Byte value) {
 	Y  = value;
 	Z = (A == 0); // set zero flag
 	N = (A & 0b01000000) > 0; // set N if bit 7 of A is set
+}
+
+void Cpu::SetTransferOperationStatus(Byte value) {
+	Z = (value == 0);
+	N = (A & 0b01000000) > 0;
 }
 
 Byte Cpu::FetchByte(s32& cycles) {
@@ -74,6 +79,22 @@ Byte Cpu::GetARegistersContent() {
 
 Byte Cpu::GetXRegistersContent() {
 	return X;
+}
+
+Byte Cpu::GetYRegisterContent() {
+	return Y;
+}
+
+void Cpu::SetARegistersContent(Byte value) {
+	A = value;
+}
+
+void Cpu::SetXRegistersContent(Byte value) {
+	X = value;
+}
+
+void Cpu::SetYRegistersContent(Byte value) {
+	Y = value;
 }
 
 void Cpu::PageCrossed(Word startingAddr, Word finalAddr, s32& cycles) {
@@ -193,8 +214,43 @@ s32 Cpu::Execute(s32 cycles) {
 				auto value = ReadByte(addr, cycles);
 				SetLDYStatus(value);
 				break;
+			} case Instructions::TAX: {
+				auto value = A;
+				X = value;
+				cycles--;
+				SetTransferOperationStatus(value);
+				break;
+			} case Instructions::TAY: {
+				auto value = A;
+				Y = value;
+				cycles--;
+				SetTransferOperationStatus(value);
+				break;
+			} case Instructions::TXA: {
+				auto value = X;
+				A = value;
+				cycles--;
+				SetTransferOperationStatus(value);
+				break;
+			} case Instructions::TYA: {
+				auto value = Y;
+				A = value;
+				cycles--;
+				SetTransferOperationStatus(value);
+				break;
+			} case Instructions::TSX: {
+				auto value = SP;
+				X = value;
+				cycles--;
+				SetTransferOperationStatus(value);
+				break;
+			} case Instructions::TXS: {
+				auto value = X;
+				SP = value;
+				cycles--;
+				SetTransferOperationStatus(value);
+				break;
 			}
-
 			default: {
 				std::cout << "Instruction not handled" << instruction << std::endl;
 				cycles--; 

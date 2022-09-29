@@ -44,4 +44,17 @@ public:
 	static constexpr Byte LDY_ABS = 0xAC;
 	// ldy x in abs mode
 	static constexpr Byte LDY_ABS_X = 0xBC;
+	// tax instruction
+	static constexpr Byte TAX = 0xAA;
+	// tay instruction
+	static constexpr Byte TAY = 0xA8;
+	// txa instruction
+	static constexpr Byte TXA = 0x8A;
+	// tya instruction
+	static constexpr Byte TYA = 0x98;
+	// tsx instruction
+	static constexpr Byte TSX = 0xBA;
+	// txs instruction
+	static constexpr Byte TXS = 0x9A;
+	
 };

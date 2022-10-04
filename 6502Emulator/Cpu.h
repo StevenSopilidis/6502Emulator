@@ -33,13 +33,30 @@ private:
     void SetLDAStatus(Byte value);
     void SetLDXStatus(Byte value);
     void SetLDYStatus(Byte value);
+    void SetLogicalOperationsStatus(Byte value);
     /// <summary>
     /// operation for activating the correct flags when
     /// executing transfer operations
     /// </summary>
     /// <param name="value">Value that we transfered </param>
     void SetTransferOperationStatus(Byte value);
+    void SetPullStackStatus(Byte value);
     Byte Add(Byte& value1, Byte& value2, s32& cycles);
+    /// <summary>
+    /// logical and between value and accumulator
+    /// </summary>
+    /// <param name="value">value to perform and with</param>
+    void And(Byte value);
+    /// <summary>
+    /// logical or between value and accumulator
+    /// </summary>
+    /// <param name="value">value to perform or with</param>
+    void OR(Byte value);
+    /// <summary>
+    /// exclusive or between value and accumulator
+    /// </summary>
+    /// <param name="value">value to perform eor with</param>
+    void EOR(Byte value);
     Word FetchWord(s32& cycles);
 
 public:

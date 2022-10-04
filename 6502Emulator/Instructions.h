@@ -56,5 +56,60 @@ public:
 	static constexpr Byte TSX = 0xBA;
 	// txs instruction
 	static constexpr Byte TXS = 0x9A;
-	
+	// pha instruction
+	static constexpr Byte PHA = 0x48;
+	// php instruction
+	static constexpr Byte PHP = 0x08;
+	// pla insturction
+	static constexpr Byte PLA = 0x68;
+	// plp instruction
+	static constexpr Byte PLP = 0x28;
+	// and in immediate mode instruction
+	static constexpr Byte AND_IMM = 0x29;
+	// and in zero page mode
+	static constexpr Byte AND_ZP = 0x25;
+	// and in zero page x mode
+	static constexpr Byte AND_ZP_X = 0x35;
+	// and in absolute mode
+	static constexpr Byte AND_ABS = 0x2D;
+	// and in zero page x mode
+	static constexpr Byte AND_ABS_X = 0x3D;
+	// and in zero page y mode
+	static constexpr Byte AND_ABS_Y = 0x39;
+	// and in indirect x mode
+	static constexpr Byte AND_IND_X = 0x21;
+	// and in inderect y mode
+	static constexpr Byte AND_IND_Y = 0x31;
+	// or in immediate mode instruction
+	static constexpr Byte ORA_IMM = 0x09;
+	// or in zero page mode
+	static constexpr Byte ORA_ZP = 0x05;
+	// or in zero page x mode
+	static constexpr Byte ORA_ZP_X = 0x15;
+	// or in absolute mode
+	static constexpr Byte ORA_ABS = 0x0D;
+	// or in zero page x mode
+	static constexpr Byte ORA_ABS_X = 0x1D;
+	// or in zero page y mode
+	static constexpr Byte ORA_ABS_Y = 0x19;
+	// or in indirect x mode
+	static constexpr Byte ORA_IND_X = 0x01;
+	// or in inderect y mode
+	static constexpr Byte ORA_IND_Y = 0x11;
+	// eor in immediate mode instruction
+	static constexpr Byte EOR_IMM = 0x49;
+	// eor in zero page mode
+	static constexpr Byte EOR_ZP = 0x45;
+	// eor in zero page x mode
+	static constexpr Byte EOR_ZP_X = 0x55;
+	// eor in absolute mode
+	static constexpr Byte EOR_ABS = 0x4D;
+	//eor in zero page x mode
+	static constexpr Byte EOR_ABS_X = 0x5D;
+	// eor in zero page y mode
+	static constexpr Byte EOR_ABS_Y = 0x59;
+	// eor in indirect x mode
+	static constexpr Byte EOR_IND_X = 0x41;
+	// eor in inderect y mode
+	static constexpr Byte EOR_IND_Y = 0x51;
 };

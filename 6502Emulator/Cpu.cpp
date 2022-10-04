@@ -22,6 +22,20 @@ Byte Cpu::Add(Byte& value1, Byte& value2, s32& cycles) {
 	return result;
 }
 
+void Cpu::And(Byte value) {
+	A &= value;
+	SetLogicalOperationsStatus(value);
+}
+
+void Cpu::OR(Byte value) {
+	A |= value;
+	SetLogicalOperationsStatus(value);
+}
+
+void Cpu::EOR(Byte value) {
+	A ^= value;
+	SetLogicalOperationsStatus(value);
+}
 
 void Cpu::SetLDAStatus(Byte value) {
 	A = value;
@@ -44,6 +58,14 @@ void  Cpu::SetLDYStatus(Byte value) {
 void Cpu::SetTransferOperationStatus(Byte value) {
 	Z = (value == 0);
 	N = (A & 0b01000000) > 0;
+}
+
+void Cpu::SetPullStackStatus(Byte value) {
+	SetTransferOperationStatus(value); // save status set
+}
+
+void Cpu::SetLogicalOperationsStatus(Byte value) {
+	SetLDXStatus(value); // same bits set
 }
 
 Byte Cpu::FetchByte(s32& cycles) {
@@ -249,6 +271,170 @@ s32 Cpu::Execute(s32 cycles) {
 				SP = value;
 				cycles--;
 				SetTransferOperationStatus(value);
+				break;
+			} case Instructions::PHA: {
+				auto value = A;
+				cycles--;
+				mem->SetMem(value, SP);
+				SP++;
+				cycles--;
+				break;
+			} case Instructions::PHP: {
+				Byte value = 0;
+				// construct status register from bit fields
+				value = value | C;
+				value = value | (Z << 2);
+				value = value | (I << 3);
+				value = value | (D << 4);
+				value = value | (B << 5);
+				value = value | (V << 6);
+				value = value | (N << 7);
+				cycles--;
+				mem->SetMem(value, SP);
+				SP++;
+				cycles--;
+				break;
+			} case Instructions::PLA: {
+				auto value = ReadByte(SP, cycles);
+				SP--;
+				A = value;
+				cycles--;
+				SetPullStackStatus(value);
+				break;
+			} case Instructions::PLP: {
+				// TODO
+				break;
+			} case Instructions::AND_IMM: {
+				And(FetchByte(cycles));
+				break;
+			} case Instructions::AND_ZP: {
+				auto addr = FetchByte(cycles);
+				And(ReadByte(addr, cycles));
+				break;
+			} case Instructions::AND_ZP_X: {
+				auto addr = FetchByte(cycles);
+				auto value = ReadByte(addr, cycles);
+				value = Add(addr, value, cycles);
+				And(value);
+				break;
+			} case Instructions::AND_ABS: {
+				auto addr = FetchWord(cycles);
+				And(ReadByte(addr, cycles));
+				break;
+			} case Instructions::AND_ABS_X: {
+				auto addr = FetchWord(cycles);
+				PageCrossed(addr, addr + X, cycles);
+				addr = addr + X;
+				And(ReadByte(addr, cycles));
+				break;
+			} case Instructions::AND_ABS_Y: {
+				auto addr = FetchWord(cycles);
+				PageCrossed(addr, addr + Y, cycles);
+				addr = addr + Y;
+				And(ReadByte(addr, cycles));
+				break;
+			} case Instructions::AND_IND_X: {
+				auto addr = FetchByte(cycles);
+				addr = Add(addr, X, cycles);
+				auto finalAddr = ReadWord(addr, cycles);
+				auto value = ReadByte(finalAddr, cycles);
+				And(value);
+				break;
+			} case  Instructions::AND_IND_Y: {
+				auto addr = FetchByte(cycles);
+				PageCrossed(addr, addr + Y, cycles);
+				addr += Y;
+				auto finalAddr = ReadWord(addr, cycles);
+				auto value = ReadByte(finalAddr, cycles);
+				And(value);
+				break;
+			} case Instructions::ORA_IMM: {
+				OR(FetchByte(cycles));
+				break;
+			} case Instructions::ORA_ZP: {
+				auto addr = FetchByte(cycles);
+				OR(ReadByte(addr, cycles));
+				break;
+			} case Instructions::ORA_ZP_X: {
+				auto addr = FetchByte(cycles);
+				auto value = ReadByte(addr, cycles);
+				value = Add(addr, value, cycles);
+				OR(value);
+				break;
+			} case Instructions::ORA_ABS: {
+				auto addr = FetchWord(cycles);
+				OR(ReadByte(addr, cycles));
+				break;
+			} case Instructions::ORA_ABS_X: {
+				auto addr = FetchWord(cycles);
+				PageCrossed(addr, addr + X, cycles);
+				addr = addr + X;
+				OR(ReadByte(addr, cycles));
+				break;
+			} case Instructions::ORA_ABS_Y: {
+				auto addr = FetchWord(cycles);
+				PageCrossed(addr, addr + Y, cycles);
+				addr = addr + Y;
+				OR(ReadByte(addr, cycles));
+				break;
+			} case Instructions::ORA_IND_X: {
+				auto addr = FetchByte(cycles);
+				addr = Add(addr, X, cycles);
+				auto finalAddr = ReadWord(addr, cycles);
+				auto value = ReadByte(finalAddr, cycles);
+				OR(value);
+				break;
+			} case  Instructions::ORA_IND_Y: {
+				auto addr = FetchByte(cycles);
+				PageCrossed(addr, addr + Y, cycles);
+				addr += Y;
+				auto finalAddr = ReadWord(addr, cycles);
+				auto value = ReadByte(finalAddr, cycles);
+				OR(value);
+				break;
+			} case Instructions::EOR_IMM: {
+				EOR(FetchByte(cycles));
+				break;
+			} case Instructions::EOR_ZP: {
+				auto addr = FetchByte(cycles);
+				EOR(ReadByte(addr, cycles));
+				break;
+			} case Instructions::EOR_ZP_X: {
+				auto addr = FetchByte(cycles);
+				auto value = ReadByte(addr, cycles);
+				value = Add(addr, value, cycles);
+				EOR(value);
+				break;
+			} case Instructions::EOR_ABS: {
+				auto addr = FetchWord(cycles);
+				EOR(ReadByte(addr, cycles));
+				break;
+			} case Instructions::EOR_ABS_X: {
+				auto addr = FetchWord(cycles);
+				PageCrossed(addr, addr + X, cycles);
+				addr = addr + X;
+				EOR(ReadByte(addr, cycles));
+				break;
+			} case Instructions::EOR_ABS_Y: {
+				auto addr = FetchWord(cycles);
+				PageCrossed(addr, addr + Y, cycles);
+				addr = addr + Y;
+				EOR(ReadByte(addr, cycles));
+				break;
+			} case Instructions::EOR_IND_X: {
+				auto addr = FetchByte(cycles);
+				addr = Add(addr, X, cycles);
+				auto finalAddr = ReadWord(addr, cycles);
+				auto value = ReadByte(finalAddr, cycles);
+				EOR(value);
+				break;
+			} case  Instructions::EOR_IND_Y: {
+				auto addr = FetchByte(cycles);
+				PageCrossed(addr, addr + Y, cycles);
+				addr += Y;
+				auto finalAddr = ReadWord(addr, cycles);
+				auto value = ReadByte(finalAddr, cycles);
+				EOR(value);
 				break;
 			}
 			default: {
